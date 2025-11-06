@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -10,14 +11,14 @@ Route::get('/user', function (Request $request) {
 
 Route::prefix('admin')->group(function () {
     // Új munka létrehozása
-    Route::post('/deliveries', [DeliveryController::class, 'store']);
+    Route::post('/deliveries', [AdminController::class, 'store']);
 
     // Munka módosítása
-    Route::put('/deliveries/{id}', [DeliveryController::class, 'update']);
+    Route::put('/deliveries/{id}', [AdminController::class, 'update']);
 
     // Munka törlése
-    Route::delete('/deliveries/{id}', [DeliveryController::class, 'destroy']);
+    Route::delete('/deliveries/{id}', [AdminController::class, 'destroy']);
 
     // Munka fuvarozóhoz rendelése
-    Route::put('/deliveries/{id}/assign', [DeliveryController::class, 'assignCarrier']);
+    Route::put('/deliveries/{id}/assign', [AdminController::class, 'assignCarrier']);
 });
