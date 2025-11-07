@@ -11,11 +11,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class AdminComponent {
   deliveries: any[] = [];
+  carriers: any[] = [];
   newDelivery = {
     start_address: '',
     end_address: '',
     recipient_name: '',
-    recipient_contact: ''
+    recipient_contact: '',
+    carrier_id: null
   };
   assignCarrierId = '';
   successMessage = '';
@@ -23,6 +25,7 @@ export class AdminComponent {
 
   constructor(private http: HttpClient) {
     this.loadDeliveries();
+    this.loadCarriers();
   }
 
   
@@ -35,21 +38,32 @@ export class AdminComponent {
     });
   }
 
+  loadCarriers() {
+  this.http.get('http://localhost:8000/api/admin/carriers').subscribe({
+    next: (res: any) => {
+      this.carriers = res;
+    },
+    error: (err) => console.error(err),
+  });
+}
+
+
   
-  createDelivery() {
-    this.http.post('http://localhost:8000/api/admin/deliveries', this.newDelivery).subscribe({
-      next: (res: any) => {
-        this.successMessage = 'Sikeresen létrehozva!';
-        this.errorMessage = '';
-        this.newDelivery = { start_address: '', end_address: '', recipient_name: '', recipient_contact: '' };
-        this.loadDeliveries();
-      },
-      error: (err) => {
-        this.errorMessage = 'Hiba a létrehozás során!';
-        console.error(err);
-      },
-    });
-  }
+createDelivery() {
+  this.http.post('http://localhost:8000/api/admin/deliveries', this.newDelivery).subscribe({
+    next: (res: any) => {
+      this.successMessage = 'Sikeresen létrehozva!';
+      this.errorMessage = '';
+      this.newDelivery = { start_address: '', end_address: '', recipient_name: '', recipient_contact: '', carrier_id: null };
+      this.loadDeliveries();
+    },
+    error: (err) => {
+      this.errorMessage = 'Hiba a létrehozás során!';
+      console.error(err);
+    },
+  });
+}
+
 
   
   editDelivery(delivery: any) {

@@ -45,6 +45,20 @@
           required
         />
       </div>
+      <div class="mb-3">
+        <label class="form-label">Fuvarozó</label>
+        <select
+          class="form-control"
+          name="carrier_id"
+          [(ngModel)]="newDelivery.carrier_id"
+          required
+        >
+          <option *ngFor="let carrier of carriers" [value]="carrier.id">
+            {{ carrier.name }}
+          </option>
+        </select>
+      </div>
+
       <button class="btn btn-success w-100" [disabled]="createForm.invalid">
         Létrehozás
       </button>

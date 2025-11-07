@@ -3,31 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Delivery;
 use App\Models\Carrier;
 
 class AdminController extends Controller
 {
         public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'pickup_address' => 'required|string',
-            'delivery_address' => 'required|string',
-            'recipient_name' => 'required|string',
-            'recipient_phone' => 'required|string',
-        ]);
+        {
+            $validated = $request->validate([
+                'start_address' => 'required|string',
+                'end_address' => 'required|string',
+                'recipient_name' => 'required|string',
+                'recipient_contact' => 'required|string',
+                'carrier_id' => 'required|exists:carriers,id', // ez fontos
+            ]);
 
-        $delivery = Delivery::create($validated);
+            $delivery = Delivery::create($validated);
 
-        return response()->json([
-            'message' => 'Munka sikeresen létrehozva!',
-            'data' => $delivery
-        ], 201);
-    }
+            return response()->json([
+                'message' => 'Munka sikeresen létrehozva!',
+                'data' => $delivery
+            ], 201);
+        }
+
+
+
 
         public function update(Request $request, $id)
     {
-        $delivery = Delivery::findOrFail($id);
+        $delivery = Carrier::findOrFail($id);
 
         $delivery->update($request->only([
             'pickup_address',
@@ -45,7 +48,7 @@ class AdminController extends Controller
 
         public function destroy($id)
     {
-        $delivery = Delivery::findOrFail($id);
+        $delivery = Carrier::findOrFail($id);
         $delivery->delete();
 
         return response()->json(['message' => 'Munka törölve!']);
@@ -58,7 +61,7 @@ class AdminController extends Controller
             'carrier_id' => 'required|exists:carriers,id'
         ]);
 
-        $delivery = Delivery::findOrFail($id);
+        $delivery = Carrier::findOrFail($id);
         $delivery->carrier_id = $validated['carrier_id'];
         $delivery->status = 'Kiosztva';
         $delivery->save();
@@ -68,4 +71,18 @@ class AdminController extends Controller
             'data' => $delivery
         ]);
     }
+
+
+
+        public function index()
+        {
+            $carriers = Carrier::all();
+            return response()->json($carriers);
+        }
+
+        public function getCarriers()
+        {
+            $carriers = Carrier::all();
+            return response()->json($carriers);
+        }
 }

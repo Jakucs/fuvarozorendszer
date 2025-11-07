@@ -20,6 +20,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::prefix('admin')->group(function () {
+
+    // Fuvarfeladatok listázása (admin nézet)
+    Route::get('/deliveries', [AdminController::class, 'index']);
     
     Route::post('/deliveries', [AdminController::class, 'store']);
 
@@ -28,6 +31,11 @@ Route::prefix('admin')->group(function () {
     Route::delete('/deliveries/{id}', [AdminController::class, 'destroy']);
 
     Route::put('/deliveries/{id}/assign', [AdminController::class, 'assignCarrier']);
+
+    Route::get('/admin/deliveries', [AdminController::class, 'index']);
+
+    Route::get('/carriers', [AdminController::class, 'getCarriers']);
+
 });
 
 Route::post('/register', [AuthController::class, 'register']);
