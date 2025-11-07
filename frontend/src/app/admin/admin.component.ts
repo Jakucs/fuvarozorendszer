@@ -1,0 +1,105 @@
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-admin',
+  imports: [FormsModule, CommonModule],
+  templateUrl: './admin.component.html',
+  styleUrl: './admin.component.css'
+})
+export class AdminComponent {
+  deliveries: any[] = [];
+  newDelivery = {
+    start_address: '',
+    end_address: '',
+    recipient_name: '',
+    recipient_contact: ''
+  };
+  assignCarrierId = '';
+  successMessage = '';
+  errorMessage = '';
+
+  constructor(private http: HttpClient) {
+    this.loadDeliveries();
+  }
+
+  // Fuvarok betöltése
+  loadDeliveries() {
+    this.http.get('http://localhost:8000/api/admin/deliveries').subscribe({
+      next: (res: any) => {
+        this.deliveries = res;
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  // Új fuvar létrehozása
+  createDelivery() {
+    this.http.post('http://localhost:8000/api/admin/deliveries', this.newDelivery).subscribe({
+      next: (res: any) => {
+        this.successMessage = 'Sikeresen létrehozva!';
+        this.errorMessage = '';
+        this.newDelivery = { start_address: '', end_address: '', recipient_name: '', recipient_contact: '' };
+        this.loadDeliveries();
+      },
+      error: (err) => {
+        this.errorMessage = 'Hiba a létrehozás során!';
+        console.error(err);
+      },
+    });
+  }
+
+  // Fuvar módosítása (például új adatokkal)
+  editDelivery(delivery: any) {
+    const updated = { ...delivery, recipient_name: prompt('Új címzett neve:', delivery.recipient_name) };
+    this.http.put(`http://localhost:8000/api/admin/deliveries/${delivery.id}`, updated).subscribe({
+      next: () => {
+        this.successMessage = 'Sikeres módosítás!';
+        this.loadDeliveries();
+      },
+      error: (err) => {
+        this.errorMessage = 'Nem sikerült módosítani!';
+        console.error(err);
+      },
+    });
+  }
+
+  // Fuvar törlése
+  deleteDelivery(id: number) {
+    if (confirm('Biztosan törlöd ezt a munkát?')) {
+      this.http.delete(`http://localhost:8000/api/admin/deliveries/${id}`).subscribe({
+        next: () => {
+          this.successMessage = 'Sikeresen törölve!';
+          this.loadDeliveries();
+        },
+        error: (err) => {
+          this.errorMessage = 'Nem sikerült törölni!';
+          console.error(err);
+        },
+      });
+    }
+  }
+
+  // Fuvarozóhoz rendelés
+  assignToCarrier(id: number) {
+    if (!this.assignCarrierId) {
+      this.errorMessage = 'Adj meg egy fuvarozó ID-t!';
+      return;
+    }
+
+    this.http.put(`http://localhost:8000/api/admin/deliveries/${id}/assign`, {
+      carrier_id: this.assignCarrierId
+    }).subscribe({
+      next: () => {
+        this.successMessage = 'Fuvarozó sikeresen hozzárendelve!';
+        this.assignCarrierId = '';
+      },
+      error: (err) => {
+        this.errorMessage = 'Hiba történt a hozzárendelés során!';
+        console.error(err);
+      },
+    });
+  }
+}
