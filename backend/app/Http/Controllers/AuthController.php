@@ -27,4 +27,25 @@ class AuthController extends Controller
                 'user' => $user
             ], 201);
         }
+
+        public function login(Request $request)
+        {
+            $credentials = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+
+            if (!Auth::attempt($credentials)) {
+                return response()->json(['message' => 'Hibás bejelentkezési adatok!'], 401);
+            }
+
+            $user = Auth::user();
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Sikeres bejelentkezés!',
+                'token' => $token,
+                'user' => $user,
+            ]);
+        }
 }
