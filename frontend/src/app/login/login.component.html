@@ -1,1 +1,49 @@
-<h1>szia</h1>
+<div class="card mx-auto shadow-lg p-4" style="max-width: 400px;">
+  <h3 class="text-center mb-3">Bejelentkezés</h3>
+
+  <form (ngSubmit)="onLogin()">
+    <!-- E-mail -->
+    <div class="mb-3">
+      <label for="email" class="form-label">E-mail cím</label>
+      <input
+        type="email"
+        id="email"
+        class="form-control"
+        [(ngModel)]="credentials.email"
+        name="email"
+        required
+      />
+    </div>
+
+    <!-- Jelszó -->
+    <div class="mb-3">
+      <label for="password" class="form-label">Jelszó</label>
+      <input
+        type="password"
+        id="password"
+        class="form-control"
+        [(ngModel)]="credentials.password"
+        name="password"
+        required
+      />
+    </div>
+
+    <!-- Gomb -->
+    <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
+  </form>
+
+  <!-- Üzenetek -->
+  <div *ngIf="errorMessage" class="alert alert-danger mt-3 text-center">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success mt-3 text-center">
+    {{ successMessage }}
+  </div>
+
+  <!-- Link regisztrációhoz -->
+  <p class="text-center mt-3">
+    Még nincs fiókod?
+    <a routerLink="/">Regisztrálj itt</a>
+  </p>
+</div>
