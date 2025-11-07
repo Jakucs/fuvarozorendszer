@@ -1,0 +1,45 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Fuvarozói feladatok</h2>
+
+  <div *ngIf="deliveries.length === 0" class="alert alert-info text-center">
+    Nincs kiosztott fuvarfeladat.
+  </div>
+
+  <div *ngFor="let d of deliveries" class="card p-3 mb-3 shadow-sm">
+    <h5>Feladat #{{ d.id }}</h5>
+    <p><strong>Kiindulási cím:</strong> {{ d.start_address }}</p>
+    <p><strong>Érkezési cím:</strong> {{ d.end_address }}</p>
+    <p><strong>Címzett neve:</strong> {{ d.recipient_name }}</p>
+    <p><strong>Elérhetőség:</strong> {{ d.recipient_contact }}</p>
+    <p><strong>Státusz:</strong> 
+      <span class="badge bg-secondary">{{ d.status }}</span>
+    </p>
+
+    
+    <div class="mt-3">
+      <label for="statusSelect" class="form-label">Státusz módosítása:</label>
+      <select
+        id="statusSelect"
+        class="form-select mb-2"
+        [(ngModel)]="d.status"
+      >
+        <option value="Kiosztva">Kiosztva</option>
+        <option value="Folyamatban">Folyamatban</option>
+        <option value="Elvégezve">Elvégezve</option>
+        <option value="Sikertelen">Sikertelen</option>
+      </select>
+
+      <button class="btn btn-primary w-100" (click)="updateStatus(d)">
+        Státusz frissítése
+      </button>
+    </div>
+  </div>
+
+  <p *ngIf="successMessage" class="text-success text-center mt-3">
+    {{ successMessage }}
+  </p>
+
+  <p *ngIf="errorMessage" class="text-danger text-center mt-3">
+    {{ errorMessage }}
+  </p>
+</div>
