@@ -8,11 +8,11 @@ use App\Http\Controllers\CarrierController;
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Fuvarozói API végpontok
+    
     Route::get('/carrier/deliveries', [CarrierController::class, 'index']);
     Route::put('/carrier/deliveries/{id}/status', [CarrierController::class, 'updateStatus']);
 
-    // Ez maradhat a végén külön
+    
     Route::get('/user', function (Request $request) {
         return $request->user();
     });

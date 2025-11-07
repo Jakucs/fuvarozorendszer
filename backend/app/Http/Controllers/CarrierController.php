@@ -8,20 +8,20 @@ use App\Models\TransportJob;
 
 class CarrierController extends Controller
 {
-    // Összes fuvarozói munka lekérése a bejelentkezett fuvarozónak
+    
     public function index(Request $request)
     {
         $carrier = $request->user();
 
-        // Feltételezzük, hogy a transport_jobs táblában van 'carrier_id'
+        
         $jobs = TransportJob::where('carrier_id', $carrier->id)
-            ->with(['job']) // ha van kapcsolat a jobs táblával
+            ->with(['job'])
             ->get();
 
         return response()->json($jobs);
     }
 
-    // Státusz frissítése
+    
     public function updateStatus(Request $request, $id)
     {
         $request->validate(['status' => 'required|string']);

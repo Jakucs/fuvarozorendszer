@@ -29,10 +29,10 @@ export class LoginComponent {
 
         if (res.token) {
           localStorage.setItem('token', res.token);
-          localStorage.setItem('user', JSON.stringify(res.user)); // 🔹 elmentjük a user-t is
+          localStorage.setItem('user', JSON.stringify(res.user));
         }
 
-        // 🔹 Szerepkör alapú átirányítás
+        
         if (res.user.role === 'carrier') {
           this.router.navigate(['/carrier']);
         } else if (res.user.role === 'admin') {
