@@ -28,11 +28,11 @@
       />
     </div>
 
-    <!-- Gomb -->
+    
     <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
   </form>
 
-  <!-- Üzenetek -->
+  
   <div *ngIf="errorMessage" class="alert alert-danger mt-3 text-center">
     {{ errorMessage }}
   </div>
@@ -41,9 +41,9 @@
     {{ successMessage }}
   </div>
 
-  <!-- Link regisztrációhoz -->
+  
   <p class="text-center mt-3">
     Még nincs fiókod?
-    <a routerLink="/">Regisztrálj itt</a>
+    <a routerLink="/" (click)="goToRegister()">Regisztrálj itt</a>
   </p>
 </div>

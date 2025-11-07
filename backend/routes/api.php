@@ -11,16 +11,16 @@ Route::get('/user', function (Request $request) {
 
 
 Route::prefix('admin')->group(function () {
-    // Új munka létrehozása
+    
     Route::post('/deliveries', [AdminController::class, 'store']);
 
-    // Munka módosítása
+    
     Route::put('/deliveries/{id}', [AdminController::class, 'update']);
 
-    // Munka törlése
+    
     Route::delete('/deliveries/{id}', [AdminController::class, 'destroy']);
 
-    // Munka fuvarozóhoz rendelése
+    
     Route::put('/deliveries/{id}/assign', [AdminController::class, 'assignCarrier']);
 });
 

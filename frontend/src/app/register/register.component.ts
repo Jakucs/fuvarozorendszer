@@ -23,6 +23,7 @@ export class RegisterComponent {
   constructor(private http: HttpClient, private router: Router) {}
 
   onSubmit() {
+    console.log(this.user);
     this.http.post('http://localhost:8000/api/register', this.user).subscribe({
       next: (res: any) => {
         this.successMessage = 'Sikeres regisztráció!';
