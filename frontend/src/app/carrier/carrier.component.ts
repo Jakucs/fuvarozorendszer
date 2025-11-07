@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -18,11 +18,21 @@ export class CarrierComponent {
     this.loadDeliveries();
   }
 
-  // Kiosztott fuvarok betöltése
+  
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  
   loadDeliveries() {
-    this.http.get('http://localhost:8000/api/carrier/deliveries').subscribe({
+    this.http.get('http://localhost:8000/api/carrier/deliveries', {
+      headers: this.getAuthHeaders()
+    }).subscribe({
       next: (res: any) => {
-        this.deliveries = res;
+        this.deliveries = res.data || res;
       },
       error: (err) => {
         console.error(err);
@@ -31,20 +41,21 @@ export class CarrierComponent {
     });
   }
 
-  // Státusz módosítása
+  
   updateStatus(delivery: any) {
     const payload = { status: delivery.status };
 
-    this.http.put(`http://localhost:8000/api/carrier/deliveries/${delivery.id}/status`, payload)
-      .subscribe({
-        next: () => {
-          this.successMessage = 'Státusz sikeresen frissítve!';
-          this.errorMessage = '';
-        },
-        error: (err) => {
-          console.error(err);
-          this.errorMessage = 'Nem sikerült módosítani a státuszt.';
-        },
-      });
+    this.http.put(`http://localhost:8000/api/carrier/deliveries/${delivery.id}`, payload, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (res: any) => {
+        this.successMessage = 'Státusz sikeresen frissítve!';
+        this.errorMessage = '';
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = 'Nem sikerült módosítani a státuszt.';
+      },
+    });
   }
 }

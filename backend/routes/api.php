@@ -4,23 +4,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CarrierController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Fuvarozói API végpontok
+    Route::get('/carrier/deliveries', [CarrierController::class, 'index']);
+    Route::put('/carrier/deliveries/{id}/status', [CarrierController::class, 'updateStatus']);
+
+    // Ez maradhat a végén külön
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});
 
 
 Route::prefix('admin')->group(function () {
     
     Route::post('/deliveries', [AdminController::class, 'store']);
 
-    
     Route::put('/deliveries/{id}', [AdminController::class, 'update']);
 
-    
     Route::delete('/deliveries/{id}', [AdminController::class, 'destroy']);
 
-    
     Route::put('/deliveries/{id}/assign', [AdminController::class, 'assignCarrier']);
 });
 

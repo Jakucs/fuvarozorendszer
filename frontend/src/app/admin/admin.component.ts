@@ -25,7 +25,7 @@ export class AdminComponent {
     this.loadDeliveries();
   }
 
-  // Fuvarok betöltése
+  
   loadDeliveries() {
     this.http.get('http://localhost:8000/api/admin/deliveries').subscribe({
       next: (res: any) => {
@@ -35,7 +35,7 @@ export class AdminComponent {
     });
   }
 
-  // Új fuvar létrehozása
+  
   createDelivery() {
     this.http.post('http://localhost:8000/api/admin/deliveries', this.newDelivery).subscribe({
       next: (res: any) => {
@@ -51,7 +51,7 @@ export class AdminComponent {
     });
   }
 
-  // Fuvar módosítása (például új adatokkal)
+  
   editDelivery(delivery: any) {
     const updated = { ...delivery, recipient_name: prompt('Új címzett neve:', delivery.recipient_name) };
     this.http.put(`http://localhost:8000/api/admin/deliveries/${delivery.id}`, updated).subscribe({
@@ -66,7 +66,7 @@ export class AdminComponent {
     });
   }
 
-  // Fuvar törlése
+  
   deleteDelivery(id: number) {
     if (confirm('Biztosan törlöd ezt a munkát?')) {
       this.http.delete(`http://localhost:8000/api/admin/deliveries/${id}`).subscribe({
@@ -82,7 +82,7 @@ export class AdminComponent {
     }
   }
 
-  // Fuvarozóhoz rendelés
+  
   assignToCarrier(id: number) {
     if (!this.assignCarrierId) {
       this.errorMessage = 'Adj meg egy fuvarozó ID-t!';

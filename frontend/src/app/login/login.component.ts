@@ -29,11 +29,17 @@ export class LoginComponent {
 
         if (res.token) {
           localStorage.setItem('token', res.token);
+          localStorage.setItem('user', JSON.stringify(res.user)); // 🔹 elmentjük a user-t is
         }
 
-        setTimeout(() => {
+        // 🔹 Szerepkör alapú átirányítás
+        if (res.user.role === 'carrier') {
+          this.router.navigate(['/carrier']);
+        } else if (res.user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
           this.router.navigate(['/']);
-        }, 1000);
+        }
       },
       error: (err) => {
         this.errorMessage = 'Hibás e-mail vagy jelszó!';
@@ -42,6 +48,7 @@ export class LoginComponent {
       },
     });
   }
+
 
   goToRegister(){
     this.router.navigate(['/register']);
