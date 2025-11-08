@@ -14,16 +14,33 @@ class AdminController extends Controller
                 'end_address' => 'required|string',
                 'recipient_name' => 'required|string',
                 'recipient_contact' => 'required|string',
-                'carrier_id' => 'required|exists:carriers,id', // ez fontos
+                'carrier_id' => 'nullable|exists:carriers,id',
+                'carrier_name' => 'nullable|string|max:255',
             ]);
 
-            $delivery = Delivery::create($validated);
+            if (empty($validated['carrier_id']) && !empty($validated['carrier_name'])) {
+                $carrier = Carrier::create(['name' => $validated['carrier_name']]);
+                $validated['carrier_id'] = $carrier->id;
+            }
+
+            if (empty($validated['carrier_id'])) {
+                return response()->json(['message' => 'Fuvarozó megadása kötelező'], 422);
+            }
+
+            $delivery = Delivery::create([
+                'start_address' => $validated['start_address'],
+                'end_address' => $validated['end_address'],
+                'recipient_name' => $validated['recipient_name'],
+                'recipient_contact' => $validated['recipient_contact'],
+                'carrier_id' => $validated['carrier_id'],
+            ]);
 
             return response()->json([
                 'message' => 'Munka sikeresen létrehozva!',
                 'data' => $delivery
             ], 201);
         }
+
 
 
         public function storeCarrier(Request $request)

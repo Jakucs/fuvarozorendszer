@@ -17,7 +17,8 @@ export class AdminComponent {
     end_address: '',
     recipient_name: '',
     recipient_contact: '',
-    carrier_id: null
+    carrier_id: null,
+    carrier_name: ''
   };
   assignCarrierId = '';
   successMessage = '';
@@ -60,7 +61,7 @@ export class AdminComponent {
       return;
     }
 
-    this.http.post('http://localhost:8000/api/admin/carriers', {
+    this.http.post('http://localhost:8000/api/admin/storecarriers', {
       name: this.newCarrierName,
     }).subscribe({
       next: (res: any) => {
@@ -78,20 +79,27 @@ export class AdminComponent {
 
 
   
-createDelivery() {
-  this.http.post('http://localhost:8000/api/admin/deliveries', this.newDelivery).subscribe({
-    next: (res: any) => {
-      this.successMessage = 'Sikeresen létrehozva!';
-      this.errorMessage = '';
-      this.newDelivery = { start_address: '', end_address: '', recipient_name: '', recipient_contact: '', carrier_id: null };
-      this.loadDeliveries();
-    },
-    error: (err) => {
-      this.errorMessage = 'Hiba a létrehozás során!';
-      console.error(err);
-    },
-  });
-}
+  createDelivery() {
+    if (!this.newDelivery.carrier_id && !this.newDelivery.carrier_name) {
+      alert('Válassz vagy adj meg új fuvarozót!');
+      return;
+    }
+
+    this.http.post('http://localhost:8000/api/admin/deliveries', this.newDelivery).subscribe({
+      next: (res: any) => {
+        this.successMessage = 'Sikeresen létrehozva!';
+        this.errorMessage = '';
+        this.newDelivery = { start_address: '', end_address: '', recipient_name: '', recipient_contact: '', carrier_id: null, carrier_name: '' };
+        this.loadDeliveries();
+        this.loadCarriers(); // frissíti a fuvarozó listát
+      },
+      error: (err) => {
+        this.errorMessage = 'Hiba a létrehozás során!';
+        console.error(err);
+      },
+    });
+  }
+
 
 
   
