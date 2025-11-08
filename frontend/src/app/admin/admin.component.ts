@@ -55,18 +55,18 @@ export class AdminComponent {
 }
 
   
-  addCarrier() {
-    if (!this.newCarrierName.trim()) {
+    addCarrier() {
+    const name = this.newCarrierName.trim();
+    if (!name) {
       alert('Kérlek, adj meg egy nevet!');
       return;
     }
 
-    this.http.post('http://localhost:8000/api/admin/storecarriers', {
-      name: this.newCarrierName,
-    }).subscribe({
+    this.http.post('http://localhost:8000/api/admin/storecarriers', { name }).subscribe({
       next: (res: any) => {
-        this.carriers.push(res); // az új fuvarozó bekerül a listába
-        this.newDelivery.carrier_id = res.id;
+        const carrier = res.data; // backend a data mezőben adja vissza
+        this.carriers.push(carrier); // frissítjük a listát
+        this.newDelivery.carrier_id = carrier.id; // automatikusan kiválasztjuk
         this.newCarrierName = '';
         this.showNewCarrier = false;
       },
@@ -76,6 +76,7 @@ export class AdminComponent {
       },
     });
   }
+
 
 
   
