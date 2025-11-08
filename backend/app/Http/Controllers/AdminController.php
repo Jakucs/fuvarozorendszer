@@ -114,11 +114,11 @@ class AdminController extends Controller
 
 
 
-        public function index()
-        {
-            $carriers = Carrier::all();
-            return response()->json($carriers);
-        }
+        public function index() {
+    $deliveries = Delivery::all();
+    return response()->json($deliveries);
+}
+
 
         public function getCarriers()
         {
