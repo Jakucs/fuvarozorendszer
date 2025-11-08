@@ -14,4 +14,8 @@ export class AuthapiService {
     register(userData: any): Observable<any> {
       return this.http.post(`${this.apiUrl}/register`, userData);
   }
+
+  logout(){
+    localStorage.removeItem('token');
+  }
 }
