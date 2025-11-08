@@ -13,10 +13,10 @@ export class AdminComponent {
   deliveries: any[] = [];
   carriers: any[] = [];
   newDelivery = {
-    start_address: '',
-    end_address: '',
+    pickup_address: '',
+    delivery_address: '',
     recipient_name: '',
-    recipient_contact: '',
+    recipient_phone: '',
     carrier_id: null,
     carrier_name: ''
   };
@@ -90,7 +90,14 @@ export class AdminComponent {
       next: (res: any) => {
         this.successMessage = 'Sikeresen létrehozva!';
         this.errorMessage = '';
-        this.newDelivery = { start_address: '', end_address: '', recipient_name: '', recipient_contact: '', carrier_id: null, carrier_name: '' };
+            this.newDelivery = {
+              pickup_address: '',
+              delivery_address: '',
+              recipient_name: '',
+              recipient_phone: '',
+              carrier_id: null,
+              carrier_name: ''
+            };
         this.loadDeliveries();
         this.loadCarriers(); // frissíti a fuvarozó listát
       },
