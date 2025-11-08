@@ -19,4 +19,9 @@ class Delivery extends Model
         'recipient_phone',
         'carrier_id',
     ];
+
+    public function carrier()
+    {
+        return $this->belongsTo(Carrier::class);
+    }
 }

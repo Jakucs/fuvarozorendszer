@@ -125,6 +125,22 @@ export class AdminComponent {
     });
   }
 
+    updateCarrier(delivery: any) {
+    const updated = { carrier_id: delivery.carrier_id };
+
+    this.http.put(`http://localhost:8000/api/admin/deliveries/${delivery.id}`, updated).subscribe({
+      next: () => {
+        this.successMessage = 'Fuvarozó sikeresen módosítva!';
+        this.loadDeliveries();
+      },
+      error: (err) => {
+        this.errorMessage = 'Nem sikerült módosítani a fuvarozót!';
+        console.error(err);
+      },
+    });
+  }
+
+
   
   deleteDelivery(id: number) {
     if (confirm('Biztosan törlöd ezt a munkát?')) {

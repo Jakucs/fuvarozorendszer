@@ -115,7 +115,7 @@ class AdminController extends Controller
 
 
         public function index() {
-            $deliveries = Delivery::all();
+            $deliveries = Delivery::with('carrier')->get();
             return response()->json($deliveries);
         }
 
