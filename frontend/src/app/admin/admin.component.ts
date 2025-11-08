@@ -22,11 +22,17 @@ export class AdminComponent {
   assignCarrierId = '';
   successMessage = '';
   errorMessage = '';
+  showNewCarrier = false;
+  newCarrierName = '';
 
   constructor(private http: HttpClient) {
     this.loadDeliveries();
     this.loadCarriers();
   }
+
+  toggleNewCarrier() {
+  this.showNewCarrier = !this.showNewCarrier;
+}
 
   
   loadDeliveries() {
@@ -46,6 +52,29 @@ export class AdminComponent {
     error: (err) => console.error(err),
   });
 }
+
+  
+  addCarrier() {
+    if (!this.newCarrierName.trim()) {
+      alert('Kérlek, adj meg egy nevet!');
+      return;
+    }
+
+    this.http.post('http://localhost:8000/api/admin/carriers', {
+      name: this.newCarrierName,
+    }).subscribe({
+      next: (res: any) => {
+        this.carriers.push(res); // az új fuvarozó bekerül a listába
+        this.newDelivery.carrier_id = res.id;
+        this.newCarrierName = '';
+        this.showNewCarrier = false;
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Hiba történt a fuvarozó hozzáadásakor.');
+      },
+    });
+  }
 
 
   
@@ -115,5 +144,10 @@ createDelivery() {
         console.error(err);
       },
     });
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
   }
 }

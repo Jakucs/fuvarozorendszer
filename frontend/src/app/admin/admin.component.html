@@ -47,17 +47,40 @@
       </div>
       <div class="mb-3">
         <label class="form-label">Fuvarozó</label>
-        <select
-          class="form-control"
-          name="carrier_id"
-          [(ngModel)]="newDelivery.carrier_id"
-          required
-        >
-          <option *ngFor="let carrier of carriers" [value]="carrier.id">
-            {{ carrier.name }}
-          </option>
-        </select>
+        <div class="input-group">
+          <select
+            class="form-control"
+            name="carrier_id"
+            [(ngModel)]="newDelivery.carrier_id"
+            required
+          >
+            <option value="" disabled selected>Válassz fuvarozót...</option>
+            <option *ngFor="let carrier of carriers" [value]="carrier.id">
+              {{ carrier.name }}
+            </option>
+          </select>
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            (click)="toggleNewCarrier()"
+          >
+            Új
+          </button>
+        </div>
       </div>
+
+      <!-- Új fuvarozó űrlap -->
+      <div *ngIf="showNewCarrier" class="mb-3 mt-2 border rounded p-3 bg-light">
+        <label class="form-label">Új fuvarozó neve</label>
+        <input
+          type="text"
+          class="form-control mb-2"
+          [(ngModel)]="newCarrierName"
+          placeholder="Pl.: Kiss Trans Kft."
+        />
+        <button class="btn btn-success btn-sm" (click)="addCarrier()">Hozzáadás</button>
+      </div>
+
 
       <button class="btn btn-success w-100" [disabled]="createForm.invalid">
         Létrehozás

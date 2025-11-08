@@ -58,4 +58,9 @@ export class CarrierComponent {
       },
     });
   }
+
+    logout() {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+  }
 }
