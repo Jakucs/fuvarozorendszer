@@ -72,19 +72,23 @@ class AdminController extends Controller
         {
             $delivery = Delivery::findOrFail($id);
 
-            $delivery->update($request->only([
-                'start_address',
-                'end_address',
-                'recipient_name',
-                'recipient_contact',
-                'status'
-            ]));
+            $validated = $request->validate([
+                'pickup_address' => 'nullable|string',
+                'delivery_address' => 'nullable|string',
+                'recipient_name' => 'nullable|string',
+                'recipient_phone' => 'nullable|string',
+                'carrier_id' => 'nullable|exists:carriers,id',
+                'status' => 'nullable|string'
+            ]);
+
+            $delivery->update($validated);
 
             return response()->json([
                 'message' => 'Munka sikeresen módosítva!',
-                'data' => $delivery
+                'data' => $delivery->load('carrier')
             ]);
         }
+
 
         public function destroy($id)
         {

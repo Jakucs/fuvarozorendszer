@@ -110,38 +110,51 @@
       <p><strong>Elérhetőség:</strong> {{ d.recipient_phone }}</p>
       <p><strong>Fuvarozó:</strong> {{ d.carrier?.name || 'Nincs hozzárendelve' }}</p>
 
-      <!-- Gomb a szerkesztés megnyitásához -->
-      <button
-        class="btn btn-primary btn-sm me-2"
-        (click)="d.showCarrierEdit = !d.showCarrierEdit"
-      >
-        Fuvarozó módosítása
-      </button>
-
-      <!-- Legördülő csak akkor, ha az admin épp szerkeszti -->
-      <div *ngIf="d.showCarrierEdit" class="mt-2">
-        <select class="form-control" [(ngModel)]="d.carrier_id">
-          <option [ngValue]="null">Nincs hozzárendelve</option>
-          <option *ngFor="let carrier of carriers" [ngValue]="carrier.id">
-            {{ carrier.name }}
-          </option>
-        </select>
-
-        <button class="btn btn-success btn-sm mt-2 me-2" (click)="updateCarrier(d)">
-          Mentés
+      <div class="d-flex gap-2">
+        <!-- Teljes módosítás menü megnyitása -->
+        <button class="btn btn-primary btn-sm" (click)="d.showEdit = !d.showEdit">
+          Módosítás
         </button>
-        <button class="btn btn-secondary btn-sm mt-2" (click)="d.showCarrierEdit = false">
-          Mégse
+        <button class="btn btn-danger btn-sm" (click)="deleteDelivery(d.id)">
+          Törlés
         </button>
       </div>
 
-      <button
-        class="btn btn-danger btn-sm me-2 mt-3"
-        (click)="deleteDelivery(d.id)"
-      >
-        Törlés
-      </button>
-    </div>
+      <!-- Teljes szerkesztő menü -->
+      <div *ngIf="d.showEdit" class="mt-2 border-top pt-2">
+        <div class="mb-1">
+          <label><strong>Kiindulás:</strong></label>
+          <input type="text" [(ngModel)]="d.pickup_address" class="form-control" />
+        </div>
+
+        <div class="mb-1">
+          <label><strong>Érkezés:</strong></label>
+          <input type="text" [(ngModel)]="d.delivery_address" class="form-control" />
+        </div>
+
+        <div class="mb-1">
+          <label><strong>Címzett:</strong></label>
+          <input type="text" [(ngModel)]="d.recipient_name" class="form-control" />
+        </div>
+
+        <div class="mb-1">
+          <label><strong>Elérhetőség:</strong></label>
+          <input type="text" [(ngModel)]="d.recipient_phone" class="form-control" />
+        </div>
+
+        <div class="mb-1">
+          <label><strong>Fuvarozó:</strong></label>
+          <select class="form-control" [(ngModel)]="d.carrier_id">
+            <option [ngValue]="null">Nincs hozzárendelve</option>
+            <option *ngFor="let carrier of carriers" [ngValue]="carrier.id">{{ carrier.name }}</option>
+          </select>
+        </div>
+
+        <div class="d-flex gap-2 mt-1">
+          <button class="btn btn-success btn-sm" (click)="updateCarrier(d)">Mentés</button>
+          <button class="btn btn-secondary btn-sm" (click)="d.showEdit = false">Mégse</button>
+        </div>
+      </div>
   </div>
 
   <p *ngIf="successMessage" class="text-success mt-3 text-center">
