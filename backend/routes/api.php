@@ -26,13 +26,13 @@ Route::prefix('admin')->group(function () {
     
     Route::post('/deliveries', [AdminController::class, 'store']);
 
+    Route::post('/storecarriers', [AdminController::class, 'storeCarrier']);
+
     Route::put('/deliveries/{id}', [AdminController::class, 'update']);
 
     Route::delete('/deliveries/{id}', [AdminController::class, 'destroy']);
 
     Route::put('/deliveries/{id}/assign', [AdminController::class, 'assignCarrier']);
-
-    Route::get('/admin/deliveries', [AdminController::class, 'index']);
 
     Route::get('/carriers', [AdminController::class, 'getCarriers']);
 

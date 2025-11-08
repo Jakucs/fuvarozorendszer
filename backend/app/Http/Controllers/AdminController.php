@@ -26,6 +26,27 @@ class AdminController extends Controller
         }
 
 
+        public function storeCarrier(Request $request)
+        {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+
+            $carrier = Carrier::create([
+                'name' => $validated['name'],
+                'email' => null,
+                'password' => null,
+            ]);
+
+            return response()->json([
+                'message' => 'Fuvarozó sikeresen létrehozva!',
+                'data' => $carrier
+            ], 201);
+        }
+
+
+
+
 
 
         public function update(Request $request, $id)
