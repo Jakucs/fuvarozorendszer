@@ -32,7 +32,13 @@ export class CarrierComponent {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (res: any) => {
-        this.deliveries = res.data || res;
+        if (res.transport_jobs) {
+          this.deliveries = res.transport_jobs;
+        } else if (Array.isArray(res)) {
+          this.deliveries = res;
+        } else {
+          this.deliveries = [];
+        }
       },
       error: (err) => {
         console.error(err);

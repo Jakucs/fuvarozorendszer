@@ -13,13 +13,14 @@ class CarrierController extends Controller
     {
         $carrier = $request->user();
 
-        
-        $jobs = TransportJob::where('carrier_id', $carrier->id)
-            ->with(['job'])
-            ->get();
-
-        return response()->json($jobs);
+        return response()->json([
+            'debug_user' => $carrier,
+            'carrier_id' => $carrier->id,
+            'transport_jobs' => TransportJob::all(['id', 'carrier_id'])
+        ]);
     }
+
+
 
     
     public function updateStatus(Request $request, $id)
