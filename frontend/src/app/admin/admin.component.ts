@@ -140,6 +140,21 @@ export class AdminComponent {
     });
   }
 
+  updateDelivery(delivery: any) {
+    this.http.put(`http://localhost:8000/api/admin/deliveries/${delivery.id}`, delivery).subscribe({
+      next: (res: any) => {
+        delivery.showEdit = false; // bezárja a szerkesztőt
+        delivery.carrier = res.data.carrier; // frissíti a kapcsolt fuvarozót
+        this.successMessage = 'Munka sikeresen módosítva!';
+      },
+      error: (err) => {
+        this.errorMessage = 'Nem sikerült módosítani!';
+        console.error(err);
+      }
+    });
+  }
+
+
 
   
   deleteDelivery(id: number) {
