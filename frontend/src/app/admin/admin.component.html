@@ -62,18 +62,18 @@
               {{ carrier.name }}
             </option>
           </select>
-          <button
+          <!--<button
             class="btn btn-outline-secondary"
             type="button"
             (click)="toggleNewCarrier()"
           >
             Új
-          </button>
+          </button> -->
         </div>
       </div>
 
       <!-- Új fuvarozó űrlap -->
-      <div *ngIf="showNewCarrier" class="mb-3 mt-2 border rounded p-3 bg-light">
+      <!--<div *ngIf="showNewCarrier" class="mb-3 mt-2 border rounded p-3 bg-light">
         <label class="form-label">Új fuvarozó neve</label>
         <input
           type="text"
@@ -86,7 +86,7 @@
           Hozzáadás
         </button>
 
-      </div>
+      </div> -->
 
 
       <button class="btn btn-success w-100" [disabled]="createForm.invalid">
