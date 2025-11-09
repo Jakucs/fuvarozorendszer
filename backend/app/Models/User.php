@@ -47,4 +47,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function carrier()
+    {
+        return $this->hasOne(Carrier::class);
+    }
+
+    public function transportJobs()
+    {
+        return $this->hasMany(TransportJob::class, 'carrier_id', 'id');
+    }
+
 }

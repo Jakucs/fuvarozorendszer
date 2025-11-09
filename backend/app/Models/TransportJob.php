@@ -25,4 +25,10 @@ class TransportJob extends Model
     {
         return $this->belongsTo(Carrier::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'carrier_id', 'id');
+    }
+
 }

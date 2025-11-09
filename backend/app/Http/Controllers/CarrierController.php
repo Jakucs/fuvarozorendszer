@@ -5,40 +5,55 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Carrier;
 use App\Models\TransportJob;
+use App\Models\Delivery;
 
 class CarrierController extends Controller
 {
     
-    public function index(Request $request)
-    {
-        $carrier = $request->user();
+        public function index(Request $request)
+        {
+            $user = $request->user();
 
-        return response()->json([
-            'debug_user' => $carrier,
-            'carrier_id' => $carrier->id,
-            'transport_jobs' => TransportJob::all(['id', 'carrier_id'])
-        ]);
-    }
+            $jobs = TransportJob::where('carrier_id', $user->id)
+                ->get([
+                    'id',
+                    'pickup_address',
+                    'delivery_address',
+                    'recipient_name',
+                    'recipient_phone',
+                    'status'
+                ]);
+
+            return response()->json([
+                'user_id' => $user->id,
+                'transport_jobs' => $jobs
+            ]);
+        }
+
+
+
+
 
 
 
     
-    public function updateStatus(Request $request, $id)
-    {
-        $request->validate(['status' => 'required|string']);
+        public function updateStatus(Request $request, $id)
+            {
+                $request->validate(['status' => 'required|string']);
 
-        $transportJob = TransportJob::findOrFail($id);
+                $job = TransportJob::findOrFail($id);
 
-        if ($transportJob->carrier_id !== $request->user()->id) {
-            return response()->json(['message' => 'Ehhez a fuvarhoz nincs jogosultságod.'], 403);
-        }
+                
+                if ($job->carrier_id !== $request->user()->id) {
+                    return response()->json(['message' => 'Ehhez a fuvarhoz nincs jogosultságod.'], 403);
+                }
 
-        $transportJob->status = $request->status;
-        $transportJob->save();
+                $job->status = $request->status;
+                $job->save();
 
-        return response()->json([
-            'message' => 'Státusz sikeresen frissítve!',
-            'job' => $transportJob,
-        ]);
-    }
+                return response()->json([
+                    'message' => 'Státusz sikeresen frissítve!',
+                    'job' => $job
+                ]);
+            }
 }

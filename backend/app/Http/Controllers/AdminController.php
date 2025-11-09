@@ -49,19 +49,24 @@ class AdminController extends Controller
         {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
+                'email' => 'nullable|email|unique:carriers,email',
+                'password' => 'nullable|string|min:6',
+                'user_id' => 'required|exists:users,id', // ide adjuk át a user ID-t
             ]);
 
             $carrier = Carrier::create([
                 'name' => $validated['name'],
-                'email' => null,
-                'password' => null,
+                'email' => $validated['email'] ?? null,
+                'password' => isset($validated['password']) ? bcrypt($validated['password']) : null,
+                'user_id' => $validated['user_id'], // így lesz összekapcsolva
             ]);
 
             return response()->json([
-                'message' => 'Fuvarozó sikeresen létrehozva!',
-                'data' => $carrier
-            ], 201);
+                'message' => 'Carrier sikeresen létrehozva!',
+                'carrier' => $carrier,
+            ]);
         }
+
 
 
 

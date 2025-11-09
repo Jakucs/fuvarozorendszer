@@ -14,10 +14,21 @@ class Carrier extends Model
         'name',
         'email',
         'password',
+        'user_id',
     ];
 
     public function jobs()
     {
         return $this->hasMany(Job::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function transportJobs()
+    {
+        return $this->hasMany(TransportJob::class);
     }
 }

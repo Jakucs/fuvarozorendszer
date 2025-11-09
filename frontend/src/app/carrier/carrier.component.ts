@@ -52,7 +52,7 @@ export class CarrierComponent {
   updateStatus(delivery: any) {
     const payload = { status: delivery.status };
 
-    this.http.put(`http://localhost:8000/api/carrier/deliveries/${delivery.id}`, payload, {
+    this.http.put(`http://localhost:8000/api/carrier/deliveries/${delivery.id}/status`, payload, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (res: any) => {

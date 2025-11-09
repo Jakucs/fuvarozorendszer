@@ -18,12 +18,13 @@ class AuthController extends Controller
                 'password' => 'required|string|min:6',
             ]);
 
-            // Összes eddig regisztrált user számának lekérdezése
+            
             $userCount = User::count();
 
-            // Ha még nincs 2 user, akkor admin lesz
+            
             $role = $userCount < 2 ? 'admin' : 'carrier';
 
+            
             $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
@@ -31,12 +32,13 @@ class AuthController extends Controller
                 'role' => $role,
             ]);
 
-            // Ha fuvarozó, akkor hozzáadjuk a carriers táblához is
+            
             if ($role === 'carrier') {
                 Carrier::create([
                     'name' => $validated['name'],
                     'email' => $validated['email'],
                     'password' => Hash::make($validated['password']),
+                    'user_id' => $user->id,
                 ]);
             }
 
@@ -45,6 +47,7 @@ class AuthController extends Controller
                 'user' => $user
             ], 201);
         }
+
 
 
         public function login(Request $request)
