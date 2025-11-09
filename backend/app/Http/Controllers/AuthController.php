@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Carrier;
 
 class AuthController extends Controller
 {
@@ -18,17 +19,26 @@ class AuthController extends Controller
             ]);
 
             // Összes eddig regisztrált user számának lekérdezése
-            $userCount = \App\Models\User::count();
+            $userCount = User::count();
 
             // Ha még nincs 2 user, akkor admin lesz
             $role = $userCount < 2 ? 'admin' : 'carrier';
 
-            $user = \App\Models\User::create([
+            $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
                 'role' => $role,
             ]);
+
+            // Ha fuvarozó, akkor hozzáadjuk a carriers táblához is
+            if ($role === 'carrier') {
+                Carrier::create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'password' => Hash::make($validated['password']),
+                ]);
+            }
 
             return response()->json([
                 'message' => 'Sikeres regisztráció!',
