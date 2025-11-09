@@ -7,10 +7,11 @@
 
   <div *ngFor="let d of deliveries" class="card p-3 mb-3 shadow-sm">
     <h5>Feladat #{{ d.id }}</h5>
-    <p><strong>Kiindulási cím:</strong> {{ d.start_address }}</p>
-    <p><strong>Érkezési cím:</strong> {{ d.end_address }}</p>
+    <p><strong>Kiindulási cím:</strong> {{ d.pickup_address }}</p>
+    <p><strong>Érkezési cím:</strong> {{ d.delivery_address }}</p>
     <p><strong>Címzett neve:</strong> {{ d.recipient_name }}</p>
-    <p><strong>Elérhetőség:</strong> {{ d.recipient_contact }}</p>
+    <p><strong>Elérhetőség:</strong> {{ d.recipient_phone }}</p>
+
     <p><strong>Státusz:</strong> 
       <span class="badge bg-secondary">{{ d.status }}</span>
     </p>
