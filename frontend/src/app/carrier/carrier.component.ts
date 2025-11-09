@@ -27,18 +27,18 @@ export class CarrierComponent {
   }
 
   
-  loadDeliveries() {
+    loadDeliveries() {
     this.http.get('http://localhost:8000/api/carrier/deliveries', {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (res: any) => {
-        if (res.transport_jobs) {
-          this.deliveries = res.transport_jobs;
-        } else if (Array.isArray(res)) {
-          this.deliveries = res;
-        } else {
-          this.deliveries = [];
-        }
+        let jobs = res.transport_jobs ?? (Array.isArray(res) ? res : []);
+        
+        // Minden fuvarhoz beállítjuk a státuszt, ha üres
+        this.deliveries = jobs.map((d: any) => ({
+          ...d,
+          status: d.status || 'Kiosztva'  // alapértelmezett státusz
+        }));
       },
       error: (err) => {
         console.error(err);
@@ -46,6 +46,7 @@ export class CarrierComponent {
       },
     });
   }
+
 
   
   updateStatus(delivery: any) {
