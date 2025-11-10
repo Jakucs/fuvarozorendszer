@@ -16,6 +16,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+        // Értesítések
+    Route::get('/notifications', function () {
+        return Notification::latest()->take(10)->get();
+    });
+
+    Route::patch('/notifications/mark-read', function () {
+        Notification::where('read', false)->update(['read' => true]);
+        return response()->json(['message' => 'Értesítések olvasottnak jelölve']);
+    });
 });
 
 
@@ -35,6 +45,16 @@ Route::prefix('admin')->group(function () {
     Route::put('/deliveries/{id}/assign', [AdminController::class, 'assignCarrier']);
 
     Route::get('/carriers', [AdminController::class, 'getCarriers']);
+
+        Route::get('/notifications', function () {
+        return Notification::latest()->take(10)->get();
+    });
+
+        // Értesítések olvasottá jelölése
+        Route::patch('/notifications/mark-read', function () {
+            Notification::where('read', false)->update(['read' => true]);
+            return response()->json(['message' => 'Értesítések olvasottnak jelölve']);
+    });
 
 });
 
