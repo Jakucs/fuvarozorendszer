@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Carrier;
 use App\Models\Delivery;
+use App\Models\Notification;
+use App\Models\TransportJob;
 
 
 class AdminController extends Controller
@@ -144,4 +146,31 @@ class AdminController extends Controller
             $carriers = Carrier::all();
             return response()->json($carriers);
         }
+
+        public function updateStatus(Request $request, $id)
+        {
+            $job = TransportJob::findOrFail($id);
+
+            $validated = $request->validate([
+                'status' => 'required|string'
+            ]);
+
+            $job->status = $validated['status'];
+            $job->save();
+
+            // Ha a munka sikertelen lett -> küldünk értesítést
+            if ($job->status === 'Sikertelen') {
+                Notification::create([
+                    'message' => 'A fuvar ' . $job->id . ' sikertelen lett.',
+                    'type' => 'failure',
+                    'transport_job_id' => $job->id,
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Státusz frissítve',
+                'data' => $job
+            ]);
+        }
+
 }
