@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 export class AdminComponent {
   deliveries: any[] = [];
   carriers: any[] = [];
+  selectedStatus: string = '';
   newDelivery = {
     pickup_address: '',
     delivery_address: '',
@@ -33,6 +34,26 @@ export class AdminComponent {
 
   toggleNewCarrier() {
   this.showNewCarrier = !this.showNewCarrier;
+}
+
+getAuthHeaders() {
+  const token = localStorage.getItem('token');
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+}
+
+
+onStatusFilterChange() {
+  this.http.get(`http://localhost:8000/api/admin/deliveries`, {
+    params: this.selectedStatus ? { status: this.selectedStatus } : {},
+    headers: this.getAuthHeaders()
+  }).subscribe({
+    next: (res: any) => {
+      this.deliveries = res.transport_jobs || [];
+    },
+    error: err => console.error(err)
+  });
 }
 
   

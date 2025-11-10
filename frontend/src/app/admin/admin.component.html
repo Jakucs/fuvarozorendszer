@@ -99,6 +99,23 @@
   <div class="card p-4 shadow-sm">
     <h4>Meglévő fuvarok</h4>
 
+      <!-- SZŰRŐ DROPDOWN -->
+  <div class="mb-3">
+    <label for="statusFilter" class="form-label">Szűrés státusz alapján:</label>
+    <select
+      id="statusFilter"
+      class="form-select"
+      [(ngModel)]="selectedStatus"
+      (change)="onStatusFilterChange()"
+    >
+      <option value="">Összes</option>
+      <option value="Kiosztva">Kiosztva</option>
+      <option value="Folyamatban">Folyamatban</option>
+      <option value="Teljesítve">Teljesítve</option>
+      <option value="Törölve">Törölve</option>
+    </select>
+  </div>
+
     <div *ngIf="deliveries.length === 0" class="text-muted text-center mt-3">
       Nincs még fuvarfeladat.
     </div>
