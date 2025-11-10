@@ -123,10 +123,20 @@ class AdminController extends Controller
 
 
 
-        public function index() {
-            $deliveries = Delivery::with('carrier')->get();
-            return response()->json($deliveries);
+        public function index(Request $request)
+        {
+            
+            $query = Delivery::with('carrier');
+
+            
+            if ($request->has('status') && $request->status !== '') {
+                $query->where('status', $request->status);
+            }
+
+            
+            return response()->json($query->get());
         }
+
 
 
         public function getCarriers()

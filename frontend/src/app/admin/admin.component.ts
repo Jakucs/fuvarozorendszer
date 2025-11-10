@@ -50,8 +50,8 @@ onStatusFilterChange() {
     headers: this.getAuthHeaders()
   }).subscribe({
     next: (res: any) => {
-      this.deliveries = res.transport_jobs || [];
-    },
+    this.deliveries = res || []; // nem res.transport_jobs
+  },
     error: err => console.error(err)
   });
 }
