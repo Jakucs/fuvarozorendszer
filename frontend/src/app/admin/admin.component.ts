@@ -13,6 +13,12 @@ export class AdminComponent {
   deliveries: any[] = [];
   carriers: any[] = [];
   selectedStatus: string = '';
+  showNotifications = false;
+  hasNewNotifications = true; // csak példa — lehet dinamikus
+  notifications = [
+  { message: 'Új fuvarfeladat érkezett!' },
+  { message: 'Egy fuvar el lett végezve.' }
+];
   newDelivery = {
     pickup_address: '',
     delivery_address: '',
@@ -31,6 +37,10 @@ export class AdminComponent {
     this.loadDeliveries();
     this.loadCarriers();
   }
+  toggleNotifications() {
+  this.showNotifications = !this.showNotifications;
+  if (this.showNotifications) this.hasNewNotifications = false;
+}
 
   toggleNewCarrier() {
   this.showNewCarrier = !this.showNewCarrier;

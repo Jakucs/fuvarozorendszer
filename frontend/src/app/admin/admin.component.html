@@ -1,6 +1,38 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">Fuvarfeladatok kezelése</h2>
 
+    <!-- Értesítés ikon -->
+  <div class="position-fixed top-0 end-0 m-3 me-5">
+    <button
+      class="btn btn-outline-secondary position-relative"
+      (click)="toggleNotifications()"
+    >
+      <i class="bi bi-bell"></i>
+      <!-- Kis piros jelző pötty, ha van új értesítés -->
+      <span
+        *ngIf="hasNewNotifications"
+        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+      ></span>
+    </button>
+
+    <!-- Legördülő értesítések panel -->
+    <div
+      *ngIf="showNotifications"
+      class="card shadow position-absolute end-0 mt-2"
+      style="width: 250px; z-index: 1050;"
+    >
+      <div class="card-header bg-light fw-bold">Értesítések</div>
+      <ul class="list-group list-group-flush">
+        <li *ngFor="let n of notifications" class="list-group-item small">
+          {{ n.message }}
+        </li>
+        <li *ngIf="notifications.length === 0" class="list-group-item text-muted small text-center">
+          Nincs új értesítés
+        </li>
+      </ul>
+    </div>
+  </div>
+
   
   <div class="card p-4 mb-4 shadow-sm">
     <h4>Új munka létrehozása</h4>
