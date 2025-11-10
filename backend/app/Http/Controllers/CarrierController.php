@@ -41,34 +41,43 @@ class CarrierController extends Controller
 
 
     
-    public function updateStatus(Request $request, $id)
-    {
-        $request->validate(['status' => 'required|string']);
+        public function updateStatus(Request $request, $id)
+        {
+            $request->validate(['status' => 'required|string']);
 
-        $user = $request->user();
-        $carrier = Carrier::where('user_id', $user->id)->first();
+            $user = $request->user();
+            $carrier = Carrier::where('user_id', $user->id)->first();
 
-        if (!$carrier) {
+            if (!$carrier) {
+                return response()->json([
+                    'message' => 'Nincs fuvarozó rekord ehhez a felhasználóhoz'
+                ], 404);
+            }
+
+            $job = TransportJob::findOrFail($id);
+
+            // Ellenőrizzük, hogy a fuvar tényleg ehhez a carrierhez tartozik
+            if ($job->carrier_id !== $carrier->id) {
+                return response()->json([
+                    'message' => 'Ehhez a fuvarhoz nincs jogosultságod.'
+                ], 403);
+            }
+
+            $job->status = $request->status;
+            $job->save();
+
+            // ⚠️ ÚJ rész: ha a fuvar sikertelen, hozzunk létre értesítést
+            if ($job->status === 'Sikertelen') {
+                Notification::create([
+                    'message' => 'Sikertelen munka: ' . $job->id,
+                    'type' => 'failure',
+                    'transport_job_id' => $job->id,
+                ]);
+            }
+
             return response()->json([
-                'message' => 'Nincs fuvarozó rekord ehhez a felhasználóhoz'
-            ], 404);
+                'message' => 'Státusz sikeresen frissítve!',
+                'job' => $job
+            ]);
         }
-
-        $job = TransportJob::findOrFail($id);
-
-        // Ellenőrizzük, hogy a fuvar tényleg ehhez a carrierhez tartozik
-        if ($job->carrier_id !== $carrier->id) {
-            return response()->json([
-                'message' => 'Ehhez a fuvarhoz nincs jogosultságod.'
-            ], 403);
-        }
-
-        $job->status = $request->status;
-        $job->save();
-
-        return response()->json([
-            'message' => 'Státusz sikeresen frissítve!',
-            'job' => $job
-        ]);
-    }
 }

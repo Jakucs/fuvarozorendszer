@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CarrierController;
+use App\Models\Notification;
+
 
 Route::middleware('auth:sanctum')->group(function () {
 

@@ -13,9 +13,12 @@ export class AdminComponent {
   deliveries: any[] = [];
   carriers: any[] = [];
   selectedStatus: string = '';
-  notifications: any[] = [];
-  hasNewNotifications = false;
-  showNotifications = false;;
+  showNotifications = false;
+  hasNewNotifications = true; // csak példa — lehet dinamikus
+  notifications = [
+  { message: 'Új fuvarfeladat érkezett!' },
+  { message: 'Egy fuvar el lett végezve.' }
+];
   newDelivery = {
     pickup_address: '',
     delivery_address: '',
@@ -33,35 +36,7 @@ export class AdminComponent {
   constructor(private http: HttpClient) {
     this.loadDeliveries();
     this.loadCarriers();
-    this.loadNotifications();
-    setInterval(() => this.loadNotifications(), 30000);
   }
-    toggleNotifications() {
-    this.showNotifications = !this.showNotifications;
-
-    // Ha kinyitotta, jelöljük olvasottnak a jelzést (piros pötty eltűnik)
-    if (this.showNotifications) {
-      this.hasNewNotifications = false;
-    }
-  }
-
-  loadNotifications() {
-    this.http.get<any[]>('http://localhost:8000/api/notifications').subscribe({
-      next: (res) => {
-        this.notifications = res;
-        // Ha van új (read=false) értesítés, piros pötty jelenik meg
-        this.hasNewNotifications = res.some(n => !n.read);
-      },
-      error: (err) => console.error('Értesítések lekérése sikertelen:', err)
-    });
-  }
-
-  markNotificationsAsRead() {
-  this.http.patch('http://localhost:8000/api/notifications/mark-read', {}).subscribe({
-    next: () => this.hasNewNotifications = false
-  });
-}
-
 
   toggleNewCarrier() {
   this.showNewCarrier = !this.showNewCarrier;
@@ -72,6 +47,30 @@ getAuthHeaders() {
   return {
     Authorization: `Bearer ${token}`,
   };
+}
+
+toggleNotifications() {
+  this.showNotifications = !this.showNotifications;
+
+  // Ha épp nyitja a panelt, töltsük be az értesítéseket
+  if (this.showNotifications) {
+    this.loadNotifications();
+  }
+}
+
+
+loadNotifications() {
+  this.http.get('http://localhost:8000/api/notifications', {
+    headers: this.getAuthHeaders()
+  }).subscribe({
+    next: (res: any) => {
+      this.notifications = res.map((n: any) => ({
+        message: `Sikertelen munka: ${n.transport_job_id}`
+      }));
+      this.hasNewNotifications = this.notifications.length > 0;
+    },
+    error: (err) => console.error(err)
+  });
 }
 
 
