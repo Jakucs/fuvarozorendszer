@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Carrier;
 use App\Models\TransportJob;
 use App\Models\Delivery;
+use App\Models\Notification;
 
 class CarrierController extends Controller
 {
@@ -14,7 +15,6 @@ class CarrierController extends Controller
     {
         $user = $request->user();
 
-        // Carrier rekord a userhez
         $carrier = Carrier::where('user_id', $user->id)->first();
 
         if (!$carrier) {
@@ -23,7 +23,6 @@ class CarrierController extends Controller
             ], 404);
         }
 
-        // Fuvarok lekérdezése a carrier.id alapján
         $jobs = TransportJob::where('carrier_id', $carrier->id)
             ->select('id', 'pickup_address', 'delivery_address', 'recipient_name', 'recipient_phone', 'status')
             ->get();
@@ -56,7 +55,6 @@ class CarrierController extends Controller
 
             $job = TransportJob::findOrFail($id);
 
-            // Ellenőrizzük, hogy a fuvar tényleg ehhez a carrierhez tartozik
             if ($job->carrier_id !== $carrier->id) {
                 return response()->json([
                     'message' => 'Ehhez a fuvarhoz nincs jogosultságod.'
@@ -66,7 +64,6 @@ class CarrierController extends Controller
             $job->status = $request->status;
             $job->save();
 
-            // ⚠️ ÚJ rész: ha a fuvar sikertelen, hozzunk létre értesítést
             if ($job->status === 'Sikertelen') {
                 Notification::create([
                     'message' => 'Sikertelen munka: ' . $job->id,

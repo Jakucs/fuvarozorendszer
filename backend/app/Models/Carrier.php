@@ -31,4 +31,9 @@ class Carrier extends Model
     {
         return $this->hasMany(TransportJob::class);
     }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
 }

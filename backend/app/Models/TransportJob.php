@@ -13,7 +13,6 @@ class TransportJob extends Model
         'carrier_id',
         'job_id',
         'status',
-        // ha van pl. start_address, end_address, stb. azok is jöhetnek ide
     ];
 
     public function job()

@@ -14,7 +14,7 @@ export class AdminComponent {
   carriers: any[] = [];
   selectedStatus: string = '';
   showNotifications = false;
-  hasNewNotifications = true; // csak példa — lehet dinamikus
+  hasNewNotifications = true; // csak példák
   notifications = [
   { message: 'Új fuvarfeladat érkezett!' },
   { message: 'Egy fuvar el lett végezve.' }
@@ -80,7 +80,7 @@ onStatusFilterChange() {
     headers: this.getAuthHeaders()
   }).subscribe({
     next: (res: any) => {
-    this.deliveries = res || []; // nem res.transport_jobs
+    this.deliveries = res || [];
   },
     error: err => console.error(err)
   });
@@ -115,9 +115,9 @@ onStatusFilterChange() {
 
     this.http.post('http://localhost:8000/api/admin/storecarriers', { name }).subscribe({
       next: (res: any) => {
-        const carrier = res.data; // backend a data mezőben adja vissza
-        this.carriers.push(carrier); // frissítjük a listát
-        this.newDelivery.carrier_id = carrier.id; // automatikusan kiválasztjuk
+        const carrier = res.data;
+        this.carriers.push(carrier);
+        this.newDelivery.carrier_id = carrier.id;
         this.newCarrierName = '';
         this.showNewCarrier = false;
       },
@@ -150,7 +150,7 @@ onStatusFilterChange() {
               carrier_name: ''
             };
         this.loadDeliveries();
-        this.loadCarriers(); // frissíti a fuvarozó listát
+        this.loadCarriers();
       },
       error: (err) => {
         this.errorMessage = 'Hiba a létrehozás során!';
@@ -194,8 +194,8 @@ onStatusFilterChange() {
   updateDelivery(delivery: any) {
     this.http.put(`http://localhost:8000/api/admin/deliveries/${delivery.id}`, delivery).subscribe({
       next: (res: any) => {
-        delivery.showEdit = false; // bezárja a szerkesztőt
-        delivery.carrier = res.data.carrier; // frissíti a kapcsolt fuvarozót
+        delivery.showEdit = false;
+        delivery.carrier = res.data.carrier;
         this.successMessage = 'Munka sikeresen módosítva!';
       },
       error: (err) => {
