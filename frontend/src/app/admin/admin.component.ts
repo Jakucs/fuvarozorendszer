@@ -13,12 +13,9 @@ export class AdminComponent {
   deliveries: any[] = [];
   carriers: any[] = [];
   selectedStatus: string = '';
-  showNotifications = false;
-  hasNewNotifications = true; // csak példa — lehet dinamikus
-  notifications = [
-  { message: 'Új fuvarfeladat érkezett!' },
-  { message: 'Egy fuvar el lett végezve.' }
-];
+  notifications: any[] = [];
+  hasNewNotifications = false;
+  showNotifications = false;;
   newDelivery = {
     pickup_address: '',
     delivery_address: '',
@@ -36,11 +33,35 @@ export class AdminComponent {
   constructor(private http: HttpClient) {
     this.loadDeliveries();
     this.loadCarriers();
+    this.loadNotifications();
+    setInterval(() => this.loadNotifications(), 30000);
   }
-  toggleNotifications() {
-  this.showNotifications = !this.showNotifications;
-  if (this.showNotifications) this.hasNewNotifications = false;
+    toggleNotifications() {
+    this.showNotifications = !this.showNotifications;
+
+    // Ha kinyitotta, jelöljük olvasottnak a jelzést (piros pötty eltűnik)
+    if (this.showNotifications) {
+      this.hasNewNotifications = false;
+    }
+  }
+
+  loadNotifications() {
+    this.http.get<any[]>('http://localhost:8000/api/notifications').subscribe({
+      next: (res) => {
+        this.notifications = res;
+        // Ha van új (read=false) értesítés, piros pötty jelenik meg
+        this.hasNewNotifications = res.some(n => !n.read);
+      },
+      error: (err) => console.error('Értesítések lekérése sikertelen:', err)
+    });
+  }
+
+  markNotificationsAsRead() {
+  this.http.patch('http://localhost:8000/api/notifications/mark-read', {}).subscribe({
+    next: () => this.hasNewNotifications = false
+  });
 }
+
 
   toggleNewCarrier() {
   this.showNewCarrier = !this.showNewCarrier;
