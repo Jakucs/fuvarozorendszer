@@ -53,14 +53,14 @@ class AdminController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'nullable|email|unique:carriers,email',
                 'password' => 'nullable|string|min:6',
-                'user_id' => 'required|exists:users,id', // ide adjuk át a user ID-t
+                'user_id' => 'required|exists:users,id',
             ]);
 
             $carrier = Carrier::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'] ?? null,
                 'password' => isset($validated['password']) ? bcrypt($validated['password']) : null,
-                'user_id' => $validated['user_id'], // így lesz összekapcsolva
+                'user_id' => $validated['user_id'],
             ]);
 
             return response()->json([
@@ -158,7 +158,6 @@ class AdminController extends Controller
             $job->status = $validated['status'];
             $job->save();
 
-            // Ha a munka sikertelen lett -> küldünk értesítést
             if ($job->status === 'Sikertelen') {
                 Notification::create([
                     'message' => 'A fuvar ' . $job->id . ' sikertelen lett.',
